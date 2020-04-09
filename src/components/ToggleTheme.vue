@@ -40,13 +40,16 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="scss" scoped>
 .toggle-theme{
-  margin-top:35px;
-  margin-right: 10px;
-  float: right;
+  padding: 10px;
   background: none;
   border: 0;
   color: var(--body-color);
+  cursor: pointer;
+
+  &:hover{
+    opacity: 0.7;
+  }
 }
 </style>

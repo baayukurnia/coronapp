@@ -11,7 +11,8 @@
   border: 0;
   border-radius: var(--radius);
   overflow: hidden;
-    background: var(--bg-card);
+  background: var(--bg-card);
+  transition: background .3s;
 
   &-body{
       padding: 20px;
