@@ -6,5 +6,5 @@ module.exports = {
         msTileColor: '#191d21',
         appleMobileWebAppCapable: 'yes',
         appleMobileWebAppStatusBarStyle: 'black',
-      } 
+      }
 }

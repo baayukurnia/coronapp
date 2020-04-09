@@ -85,7 +85,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(p, index) in provinsi" :key="p.FID">
+                <tr v-for="p in provinsi" :key="p.FID">
                   <td>{{ p.attributes.Provinsi }}</td>
                   <td class="red">{{ p.attributes.Kasus_Posi.toLocaleString() }}</td>
                   <td class="green">{{ p.attributes.Kasus_Semb.toLocaleString() }}</td>
@@ -385,9 +385,9 @@ footer{
 .red,.error{
       color: #dd1818
     }
-    .error{
-      font-style: italic;
-    }
+.error{
+  font-style: italic;
+}
 .chartRange {
     margin: 0;
     padding: 0;
