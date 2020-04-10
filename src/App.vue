@@ -13,9 +13,11 @@
         </div>
       </div>
     </div>
-    <div v-if="!online" class="container">
-      <p class="updatetext text-center">{{ message }} <span v-if="error !== null" class="error"><br/>{{ error }}</span></p>
-    </div>
+    <transition name="fade">
+      <div v-if="!online" class="container message">
+        <p class="updatetext text-center">{{ message }}</p>
+      </div>
+    </transition>
     <div v-if="loaded">
       <div class="container">
         <p class="updatetime">Sumber data : Kementerian Kesehatan & JHU <br/> Update : {{ stats.updated }}</p>
@@ -123,7 +125,6 @@ export default {
       online: null,
       loaded: false,
       message: "Memuat data..",
-      error: null,
       
       inWeek: false,
 
@@ -179,7 +180,7 @@ export default {
     },
     reload() {
       this.message = "Memuat ulang data.."
-      this.loaded = false
+      this.online = false
       this.fetchData()
       this.inWeek = false
       this.$refs.chart.render()
@@ -237,11 +238,9 @@ export default {
           })
         )
         .catch(errors => {
-          // react on errors.
           console.error(errors)
 
-          this.message = "Sepertinya anda sedang offline."
-          this.error = errors
+          this.message = "Sepertinya anda sedang offline. "
           this.loadSaved()
         });
     },
@@ -252,20 +251,18 @@ export default {
           const t = JSON.parse(localStorage.getItem("t"));
           const p = JSON.parse(localStorage.getItem("p"));
           const k = JSON.parse(localStorage.getItem("k"));
-
-          console.log(p)
-
+          
           this.datacollection.labels = Object.keys(t.cases)
           this.datacollection.datasets[0].data = Object.values(t.cases)
           this.datacollection.datasets[1].data = Object.values(t.deaths)
           this.datacollection.datasets[2].data = Object.values(t.recovered)
 
-          this.country = d.country
-          this.stats.cases = d.cases.toLocaleString()
+          this.country = k.Country_Region
+          this.stats.cases = k.Confirmed.toLocaleString()
           this.stats.todayCases = d.todayCases.toLocaleString()
-          this.stats.deaths = d.deaths.toLocaleString()
+          this.stats.deaths = k.Deaths.toLocaleString()
           this.stats.todayDeaths = d.todayDeaths.toLocaleString()
-          this.stats.recovered = d.recovered.toLocaleString()
+          this.stats.recovered = k.Recovered.toLocaleString()
           this.stats.tests = d.tests.toLocaleString()
           this.stats.casesPerOneMillion = d.casesPerOneMillion
           this.stats.deathsPerOneMillion = d.deathsPerOneMillion
@@ -382,12 +379,9 @@ footer{
     padding: 0 20px;
     color: #e8a307;
 }
-.red,.error{
+.red{
       color: #dd1818
     }
-.error{
-  font-style: italic;
-}
 .chartRange {
     margin: 0;
     padding: 0;
@@ -695,6 +689,13 @@ table th {
   .hidden-sm{
     display: none;
   }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 
 @keyframes rotation {
