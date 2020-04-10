@@ -14,90 +14,92 @@
       </div>
     </div>
     <transition name="fade">
-      <div v-if="!online" class="container message">
+      <div v-if="!loaded || !online" class="container message">
         <p class="updatetext text-center">{{ message }}</p>
       </div>
     </transition>
-    <div v-if="loaded">
-      <div class="container">
-        <p class="updatetime">Sumber data : Kementerian Kesehatan & JHU <br/> Update : {{ stats.updated }}</p>
-      </div>
-      <div class="stats">
+    <main>
+      <div v-if="loaded">
         <div class="container">
-          <div class="stats-container flex-container">
-            <Card>
-              <h4 class="title">Positif</h4>
-              <span class="number">{{ stats.cases }}</span>
-              <span class="label red">(+{{ stats.todayCases }}) </span>
-              <span class="label">Orang</span>
-              <span class="emoji">🤒</span>
-            </Card>
+          <p class="updatetime">Sumber data : Kementerian Kesehatan & JHU <br/> Update : {{ stats.updated }}</p>
+        </div>
+        <div class="stats">
+          <div class="container">
+            <div class="stats-container flex-container">
+              <Card>
+                <h4 class="title">Positif</h4>
+                <span class="number">{{ stats.cases }}</span>
+                <span class="label red">(+{{ stats.todayCases }}) </span>
+                <span class="label">Orang</span>
+                <span class="emoji">🤒</span>
+              </Card>
+              
+              <Card>
+                <h4 class="title">Sembuh</h4>
+                <span class="number">{{ stats.recovered }}</span>
+                <span class="label">Orang</span>
+                <span class="emoji">😇</span>
+              </Card>
+              
+              <Card>
+                <h4 class="title">Meninggal</h4>
+                <span class="number">{{ stats.deaths }}</span>
+                <span class="label red">(+{{ stats.todayDeaths }}) </span>
+                <span class="label">Orang</span>
+                <span class="emoji">😵</span>
+              </Card>
+              
+              <Card>
+                <h4 class="title">Dites</h4>
+                <span class="number">{{ stats.tests }}</span>
+                <span class="label">Orang</span>
+                <span class="emoji">🌡️</span>
+              </Card>
+            </div>
+          </div>
+        </div>
+        <div class="statsHistory">
+          <div class="container">
+            <h3>Statistik</h3>
+            <ul class="chartRange">
+              <li :class="{ active: inWeek }" @click.prevent="inWeek = true; setInWeek()">
+                7 Hari
+              </li>
+              <li :class="{ active: !inWeek }" @click.prevent="inWeek = false; setInMonth()">
+                30 Hari
+              </li>
+            </ul>
+            <line-chart :chart-data="datacollection" :height="330"  ref="chart"/>
+          </div>
+        </div>
+        
+        <div class="dataProvinsi">
+          <div class="container">
             
-            <Card>
-              <h4 class="title">Sembuh</h4>
-              <span class="number">{{ stats.recovered }}</span>
-              <span class="label">Orang</span>
-              <span class="emoji">😇</span>
-            </Card>
-            
-            <Card>
-              <h4 class="title">Meninggal</h4>
-              <span class="number">{{ stats.deaths }}</span>
-              <span class="label red">(+{{ stats.todayDeaths }}) </span>
-              <span class="label">Orang</span>
-              <span class="emoji">😵</span>
-            </Card>
-            
-            <Card>
-              <h4 class="title">Dites</h4>
-              <span class="number">{{ stats.tests }}</span>
-              <span class="label">Orang</span>
-              <span class="emoji">🌡️</span>
-            </Card>
+            <h3 class="text-center">Data Daerah</h3>
+            <p class="text-center">*urut kasus terbanyak</p>
+            <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Provinsi</th>
+                    <th scope="col"><span class="only-sm">🤒</span><span class="hidden-sm">Positif</span></th>
+                    <th scope="col"><span class="only-sm">😇</span><span class="hidden-sm">Sembuh</span></th>
+                    <th scope="col"><span class="only-sm">😵</span><span class="hidden-sm">Meninggal</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="p in provinsi" :key="p.FID">
+                    <td>{{ p.attributes.Provinsi }}</td>
+                    <td class="red">{{ p.attributes.Kasus_Posi.toLocaleString() }}</td>
+                    <td class="green">{{ p.attributes.Kasus_Semb.toLocaleString() }}</td>
+                    <td class="purple">{{ p.attributes.Kasus_Meni.toLocaleString() }}</td>
+                  </tr>
+                </tbody>
+            </table>
           </div>
         </div>
       </div>
-      <div class="statsHistory">
-        <div class="container">
-          <h3>Statistik</h3>
-          <ul class="chartRange">
-            <li :class="{ active: inWeek }" @click.prevent="inWeek = true; setInWeek()">
-              7 Hari
-            </li>
-            <li :class="{ active: !inWeek }" @click.prevent="inWeek = false; setInMonth()">
-              30 Hari
-            </li>
-          </ul>
-          <line-chart :chart-data="datacollection" :height="330"  ref="chart"/>
-        </div>
-      </div>
-      
-      <div class="dataProvinsi">
-        <div class="container">
-          
-          <h3 class="text-center">Data Daerah</h3>
-          <p class="text-center">*urut kasus terbanyak</p>
-          <table>
-              <thead>
-                <tr>
-                  <th scope="col">Provinsi</th>
-                  <th scope="col"><span class="only-sm">🤒</span><span class="hidden-sm">Positif</span></th>
-                  <th scope="col"><span class="only-sm">😇</span><span class="hidden-sm">Sembuh</span></th>
-                  <th scope="col"><span class="only-sm">😵</span><span class="hidden-sm">Meninggal</span></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="p in provinsi" :key="p.FID">
-                  <td>{{ p.attributes.Provinsi }}</td>
-                  <td class="red">{{ p.attributes.Kasus_Posi.toLocaleString() }}</td>
-                  <td class="green">{{ p.attributes.Kasus_Semb.toLocaleString() }}</td>
-                  <td class="purple">{{ p.attributes.Kasus_Meni.toLocaleString() }}</td>
-                </tr>
-              </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+    </main>
     <footer>
       <div class="container text-center">
         <p>Made with 💙 by <a href="https://instagram.com/baayukurnia">Bayu Kurnia</a> | 🙏 <a href="https://kawalcorona.com/">Ethical Hacker Indonesia</a> & <a href="https://github.com/NovelCovid/API">NovelCOVID-19</a></p>
@@ -180,7 +182,7 @@ export default {
     },
     reload() {
       this.message = "Memuat ulang data.."
-      this.online = false
+      this.loaded = false
       this.fetchData()
       this.inWeek = false
       this.$refs.chart.render()
@@ -238,15 +240,14 @@ export default {
           })
         )
         .catch(errors => {
+          this.message = "Sepertinya anda sedang offline. Memuat data lawas.."
+          this.online = false
           console.error(errors)
-
-          this.message = "Sepertinya anda sedang offline. "
           this.loadSaved()
         });
     },
     loadSaved() {
         if (localStorage.d) {
-          this.message = "Sepertinya anda sedang offline. Memuat data lawas.."
           const d = JSON.parse(localStorage.getItem("d"));
           const t = JSON.parse(localStorage.getItem("t"));
           const p = JSON.parse(localStorage.getItem("p"));
@@ -346,6 +347,9 @@ body{
   overflow-x: hidden;
 }
 
+main{
+  min-height: 35vh;
+}
 footer{
   margin-top: 50px;
   p{
