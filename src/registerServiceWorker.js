@@ -17,6 +17,7 @@ if (process.env.NODE_ENV === 'production') {
       console.log('Content has been cached for offline use.')
     },
     updatefound () {
+      worker.postMessage({ action: "SKIP_WAITING" })
       console.log('New content is downloading.')
     },
     updated () {
