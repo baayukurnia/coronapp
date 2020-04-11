@@ -195,7 +195,7 @@ export default {
       let three =
         "https://api.kawalcorona.com/indonesia/provinsi/";
       let four =
-        "https://api.kawalcorona.com/";
+        "https://api.kawalcorona.com/indonesia";
 
       const requestOne = axios.get(one);
       const requestTwo = axios.get(two);
@@ -209,7 +209,7 @@ export default {
             const d = responses[0].data
             const t = responses[1].data.timeline
             const p = responses[2].data
-            const k = responses[3].data[35].attributes
+            const k = responses[3].data[0]
             
             localStorage.setItem("d", JSON.stringify(d));
             localStorage.setItem("t", JSON.stringify(t));
@@ -221,12 +221,12 @@ export default {
             this.datacollection.datasets[1].data = Object.values(t.deaths)
             this.datacollection.datasets[2].data = Object.values(t.recovered)
 
-            this.country = k.Country_Region
-            this.stats.cases = k.Confirmed.toLocaleString()
+            this.country = k.name
+            this.stats.cases = k.positif.toLocaleString()
             this.stats.todayCases = d.todayCases.toLocaleString()
-            this.stats.deaths = k.Deaths.toLocaleString()
+            this.stats.deaths = k.meninggal.toLocaleString()
             this.stats.todayDeaths = d.todayDeaths.toLocaleString()
-            this.stats.recovered = k.Recovered.toLocaleString()
+            this.stats.recovered = k.sembuh.toLocaleString()
             this.stats.tests = d.tests.toLocaleString()
             this.stats.casesPerOneMillion = d.casesPerOneMillion
             this.stats.deathsPerOneMillion = d.deathsPerOneMillion
