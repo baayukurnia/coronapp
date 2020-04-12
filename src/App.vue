@@ -363,8 +363,9 @@ footer{
   margin-top: 50px;
   p{
     padding: 0 20px;
-    opacity: 0.6;
-    font-size: 12px;
+    opacity: 0.3;
+    font-size: 10px;
+    transition: 0.3s;
     &:hover{
       opacity: 1;
     }
