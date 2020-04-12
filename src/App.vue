@@ -352,6 +352,21 @@ body{
   transition: .3s ease
 }
 
+::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+ 
+::-webkit-scrollbar-track {
+  box-shadow: none
+}
+ 
+::-webkit-scrollbar-thumb {
+  background-color: slategrey;
+  outline: 1px solid slategrey;
+  border-radius: 10px;
+}
+
 #app{
   overflow-x: hidden;
 }
