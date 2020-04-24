@@ -3,7 +3,7 @@
     <div class="header row">
       <div class="container">
         <h1 class="title">Waspada Covid-19
-          <span class="titleHastag">#DirumahAja <a href="https://www.instagram.com/p/B-an80nFnLe/">#IkutGiveaway</a></span>
+          <span class="titleHastag">#DirumahAja</span>
         </h1>
         <div class="buttons">
           <toggle-theme></toggle-theme>
@@ -21,7 +21,7 @@
     <main>
       <div v-if="loaded">
         <div class="container">
-          <p class="updatetime">Sumber data : Kementerian Kesehatan & JHU <br/> Update : {{ stats.updated }}</p>
+          <p class="updatetime">Sumber data : Kementerian Kesehatan, JHU, Worldometers <br/> Update : {{ stats.updated }}</p>
         </div>
         <div class="stats">
           <div class="container">
@@ -189,51 +189,48 @@ export default {
     },
     fetchData() {
       let one =
-        "https://corona.lmao.ninja/yesterday/ID";
+        "https://corona.lmao.ninja/v2/countries/ID?yesterday=false";
       let two =
         "https://corona.lmao.ninja/v2/historical/ID?lastdays=30";
       let three =
         "https://api.kawalcorona.com/indonesia/provinsi/";
-      let four =
-        "https://api.kawalcorona.com/";
 
       const requestOne = axios.get(one);
       const requestTwo = axios.get(two);
       const requestThree = axios.get(three);
-      const requestFour = axios.get(four);
 
       axios
-        .all([requestOne, requestTwo, requestThree, requestFour])
+        .all([requestOne, requestTwo, requestThree])
         .then(
           axios.spread((...responses) => {
             const d = responses[0].data
             const t = responses[1].data.timeline
             const p = responses[2].data
-            const kx = responses[3].data.filter(function (el) {return el.attributes.Country_Region === 'Indonesia' })
-            console.log(kx)
-            const k = kx[0].attributes
+            // const kx = responses[3].data.filter(function (el) {return el.attributes.Country_Region === 'Indonesia' })
+            
+            // const k = kx[0].attributes
             
             localStorage.setItem("d", JSON.stringify(d));
             localStorage.setItem("t", JSON.stringify(t));
             localStorage.setItem("p", JSON.stringify(p));
-            localStorage.setItem("k", JSON.stringify(k));
+            // localStorage.setItem("k", JSON.stringify(k));
 
             this.datacollection.labels = Object.keys(t.cases)
             this.datacollection.datasets[0].data = Object.values(t.cases)
             this.datacollection.datasets[1].data = Object.values(t.deaths)
             this.datacollection.datasets[2].data = Object.values(t.recovered)
 
-            this.country = k.Country_Region
-            this.stats.cases = k.Confirmed.toLocaleString()
+            this.country = d.country
+            this.stats.cases = d.cases.toLocaleString()
             this.stats.todayCases = d.todayCases.toLocaleString()
-            this.stats.deaths = k.Deaths.toLocaleString()
+            this.stats.deaths = d.deaths.toLocaleString()
             this.stats.todayDeaths = d.todayDeaths.toLocaleString()
-            this.stats.recovered = k.Recovered.toLocaleString()
+            this.stats.recovered = d.recovered.toLocaleString()
             this.stats.tests = d.tests.toLocaleString()
             this.stats.casesPerOneMillion = d.casesPerOneMillion
             this.stats.deathsPerOneMillion = d.deathsPerOneMillion
             this.stats.testsPerOneMillion = d.testsPerOneMillion
-            this.stats.updated = new Date(k.Last_Update)
+            this.stats.updated = new Date(d.updated)
 
             this.provinsi = p
             
