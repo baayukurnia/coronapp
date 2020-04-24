@@ -3,7 +3,7 @@
     <div class="header row">
       <div class="container">
         <h1 class="title">Waspada Covid-19
-          <span class="titleHastag">#DirumahAja</span>
+          <span class="titleHastag">#DirumahAja <a href="https://www.sehataqua.co.id/terapkan-waktu-minum-air-putih-yang-baik/">#Terhidrasi</a></span>
         </h1>
         <div class="buttons">
           <toggle-theme></toggle-theme>
