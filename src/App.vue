@@ -189,7 +189,7 @@ export default {
     },
     fetchData() {
       let one =
-        "https://corona.lmao.ninja/v2/countries/ID?yesterday=false";
+        "https://corona.lmao.ninja/v2/countries/ID?yesterday=true";
       let two =
         "https://corona.lmao.ninja/v2/historical/ID?lastdays=30";
       let three =
